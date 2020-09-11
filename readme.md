@@ -1,3 +1,19 @@
+# 📝 Sobre
+Anotações que faço ao longo dos estudos sobre:
+- React Native
+- Hooks (context api, useCallback, useMemo,...)
+- API REST
+- TDD(Test-Driven Development)
+
+# 🏆 Desafio
+- [x] Anotar a forma que resolvo os problemas, traçando caminhos e afins.
+- [x] Colocar em prática os conhecimentos que são adquiridos diáriamente nos meus estudos.
+
+# 👀 Projetos nos quais estou aplicando esses conceitos
+Disponível em: [App GoBarber](https://github.com/danilobandeira29/mobile-gobarber)
+
+---
+
 ## Endereços de imagens
 1. Alterar a environment variable APP_API_URL para o ip da máquina.
 
@@ -90,7 +106,7 @@ const Dashboard: React.FC = () => {
   const navigateToCreateAppointment = useCallback((providerId: string) => {
     navigate('CreateAppointment', { providerId });
   }, [navigate]);
-  
+
 return (...
   <ProvidersList
     data={providers}
