@@ -269,3 +269,109 @@ const CreateAppointment: React.FC = () => {
 ```
 
 2. Fazer a estilização do Header de acordo com o layout.
+
+## Alternando entre providers
+1. Fazer a criação da FlatList
+
+```typescript
+import React, { useCallback } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
+interface RouteParams {
+  providerId: string;
+}
+
+const CreateAppointment: React.FC = () => {
+  const { user } = useAuth();
+  const { params } = useRoute();
+  const { goBack } = useNavigation();
+  const { providerId } = params as RouteParams;
+  const [selectedProvider, setSelectedProvider] = useState(providerId);
+
+  const navigateBack = useCallback(() => {
+    goBack();
+  }, [goBack]);
+
+  const handleSelectedProvider = useCallback((id: string) => {
+    setSelectedProvider(id);
+  }, []);
+
+  return (
+    <Container>
+      <Header>
+        <BackButton onPress={navigateBack}>
+          <Icon name="arrow-left" size={24} color="#">
+        </BackButton>
+        <HeaderTitle>
+          Agendamentos
+        </HeaderTitle>
+        <UserAvatar source={{ uri: user.avatar_url }}>
+      </Header>
+
+      <ProvidersListContainer>
+        <ProvidersList
+          data={providers}
+          keyExtractor={provider => provider.id}
+          renderItem=(({ item: provider }) => (
+            <ProviderContainer 
+              onPress={() => handleSelectedProvider(provider.id)}
+              selected={provider.id === selectedProvider}
+            >
+              <ProviderAvatar source={{ uri:provider.avatar_url }}/>
+              <ProviderName>
+                {provider.name}
+              </ProviderName>
+            </ProviderContainer>
+          ))
+        />
+      </ProvidersListContainer>
+    </Container>
+  )
+};
+
+```
+
+2. Fazer a estilização
+```typescript
+import styled from 'styled-components/native';
+
+interface ProviderContainerProps {
+  selected: boolean;
+}
+
+interface ProviderNameProps {
+  selected: boolean;
+}
+
+
+export const ProvidersListContainer = styled.View`
+  height: 112px;
+`;
+
+export const ProvidersList = styled(FlatList as new () => FlatList<Provider>)`
+  padding: 32px 24px;
+`;
+
+export const ProviderContainer = styled(RectButton)<ProviderContainerProps>`
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+  padding: 8px 12px;
+  background: ${props => (props.selected ? '#ff9000' : '#3b3e47')};
+  border-radius: 10px;
+`;
+
+export const ProviderAvatar = styled.Image`
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  margin-right: 8px;
+`;
+
+export const ProviderName = styled.Text<ProviderNameProps>`
+  color: ${props => (props.selected ? '#232129' : '#f4ede8')};
+  font-size: 16px;
+  font-family: 'RobotoSlab-Medium';
+`;
+
+```
