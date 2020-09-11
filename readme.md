@@ -230,3 +230,42 @@ export const ProvidersListTitle = styled.Text`
 `;
 
 ```
+
+## Estrutura da criação de appointments
+1. Fazer a estruturação do header e receber os route params.
+```typescript
+import React, { useCallback } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
+interface RouteParams {
+  providerId: string;
+}
+
+const CreateAppointment: React.FC = () => {
+  const { user } = useAuth();
+  const { params } = useRoute();
+  const { goBack } = useNavigation();
+  const { providerId } = params as RouteParams;
+
+  const navigateBack = useCallback(() => {
+    goBack();
+  }, [goBack]);
+
+  return (
+    <Container>
+      <Header>
+        <BackButton onPress={navigateBack}>
+          <Icon name="arrow-left" size={24} color="#">
+        </BackButton>
+        <HeaderTitle>
+          Agendamentos
+        </HeaderTitle>
+        <UserAvatar source={{ uri: user.avatar_url }}>
+      </Header>
+    </Container>
+  )
+};
+
+```
+
+2. Fazer a estilização do Header de acordo com o layout.
