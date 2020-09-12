@@ -631,3 +631,35 @@ export const SectionContent = styled.ScrollView.attrs({
   showsHorizontalScrollIndicator: false,
 })``;
 ```
+## Criação do agendamento
+1. Criar um botão que ao pressionado, irá fazer a chamada a api.
+```typescript
+
+const handleCreateAppointment = useCallback(() => {
+  try {
+    const date = new Date(selectedDate);
+    date.setHours(selectedHour + 3); // +3 por causa do timezone
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    await api.post('/appointments', {
+      provide_id: selectedProvider,
+      date,
+    });
+
+    navigate('AppointmentCreated', { date: date.getTime() }) // não posso mandar a class Date, por isso pegar apenas a data como number
+  } catch (err) {
+    Alert.alert(
+      'Erro ao tentar criar agendamento!',
+      'Ocorreu um erro ao tentar criar agendamento, tente novamente.'
+    )
+  }
+}, [selectedProvider, selectedHour, selectedDate, navigate]);
+
+<CreateAppointmentButton onPress={handleCreateAppointment}>
+  <CreateAppointmentButtonText>
+    Agendar
+  </CreateAppointmentButtonText>
+</CreateAppointmentButton>
+```
