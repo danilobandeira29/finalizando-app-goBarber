@@ -481,3 +481,21 @@ useEffect(() => {
 }, [selectedDate, selectedProvider]);
 
 ```
+## Debuggando app com Flipper
+- Criada pelo facebook, permite fazer debug de aplicações nativas e híbridas.
+- Consigo observar toda a árvore de elementos do app: páginas, estados, hooks e afins.
+- Caso queira mostrar algum elemento específico, posso procurar direto na árvore mostrada no Flipper, ou posso ir lá na página de estilo do componente e seta um *displayName*. **Pois os nomes serão diferentes já que no final das contas serão nomes de componentes nativos.**
+
+Exemplo
+```typescript
+export const Header = styled.View``;
+
+Header.displayName = 'DashboardHeader';
+
+```
+
+1. Baixar o Flipper e Instalar.
+2. Caso dê erro de OpenSSL quando abrir o Flipper, instalar OpenSSL, setar uma nova variável ambiente no windows chamada *OPENSSL_CONF* com o valor *C:\Program Files\OpenSSL-Win64\bin*
+> Verificar se o valor é realmente o caminho que o *OpenSSL* foi instalado.
+3. Editar a variável ambiente *Path* do windows e adicionar *C:\Program Files\OpenSSL-Win64\bin*.
+4. Ir no windows e digitar *openssl* ou abrir o cmd e digitar *openssl*.
