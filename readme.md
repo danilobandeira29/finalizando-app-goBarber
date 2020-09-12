@@ -499,3 +499,42 @@ Header.displayName = 'DashboardHeader';
 > Verificar se o valor é realmente o caminho que o *OpenSSL* foi instalado.
 3. Editar a variável ambiente *Path* do windows e adicionar *C:\Program Files\OpenSSL-Win64\bin*.
 4. Ir no windows e digitar *openssl* ou abrir o cmd e digitar *openssl*.
+
+## Disponibilidade por turno
+1. Instalar a lib *date-fns* para formatar a hora
+2. Criar um calculo para exibir a disponibilidade do provider de acordo com o turno.
+```typescript
+const morningAvailability = useMemo(() => {
+  return providerDayAvailability
+  .filter(({ hour }) => hour < 12)
+  .map(({ hour, available }) => ({
+    hour,
+    available,
+    hourFormatted: format(new Date().setHour(hour), 'HH:00')
+  }))
+}, 
+[providerDayAvailability]);
+
+const afternoonAvailability = useMemo(() => {
+  return providerDayAvailability
+  .filter(({ hour }) => hour < 12)
+  .map(({ hour, available }) => ({
+    hour,
+    available,
+    hourFormatted: format(new Date().setHour(hour), 'HH:00')
+  }))
+}, 
+[providerDayAvailability]);
+
+
+return (
+  ...
+  {morningAvailability.map(({ hourFormatted }) => (
+    <Title key={hourFormatted}>{hourFormatted}</Title>
+  ))}
+
+  {afternoonAvailability.map(({ hourFormatted }) => (
+    <Title key={hourFormatted}>{hourFormatted}</Title>
+  ))}
+)
+```
