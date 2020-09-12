@@ -538,3 +538,96 @@ return (
   ))}
 )
 ```
+## Mostrando horário em tela
+1. Fazer a estruturação e criar uma função, para quando o usuário acionar o *onPress* em algum horário, alterar o valor de uma variável de estado passando a hora. Então, esse botão vai ter uma prop *selected* que vai selecionar se a hora do agendamento é igual a hora da variável de estado.
+```typescript
+<Content>
+  <ProvidersListContainer>
+    <ProvidersList
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      data={providers}
+      keyExtractor={provider => provider.id}
+      renderItem={({ item: provider }) => (
+        <ProviderContainer
+          onPress={() => handleSelectProvider(provider.id)}
+          selected={provider.id === selectedProvider}
+        >
+          <ProviderAvatar source={{ uri: provider.avatar_url }} />
+          <ProviderName selected={provider.id === selectedProvider}>
+            {provider.name}
+          </ProviderName>
+        </ProviderContainer>
+      )}
+    />
+  </ProvidersListContainer>
+  <Calendar>
+    <Title>Escolha uma data</Title>
+    <OpenDatePickerButton onPress={handleToggleDatePicker}>
+      <OpenDatePickerButtonText>
+        Selecionar outra data
+      </OpenDatePickerButtonText>
+    </OpenDatePickerButton>
+    {showDatePicker && (
+      <DayTimePicker
+        onChange={handleChangeDate}
+        value={selectedDate}
+        mode="date"
+        display="calendar"
+      />
+    )}
+  </Calendar>
+
+  <Schedule>
+    <Title>Escolha o horário</Title>
+    <Section>
+      <SectionTitle>Manhã</SectionTitle>
+      <SectionContent>
+        {morningAvailability.map(({ hourFormatted, available, hour }) => (
+          <Hour
+            enabled={available}
+            key={hourFormatted}
+            selected={hour === selectedHour}
+            onPress={() => handleSelectHour(hour)}
+            available={available}
+          >
+            <HourText selected={hour === selectedHour}>
+              {hourFormatted}
+            </HourText>
+          </Hour>
+        ))}
+      </SectionContent>
+    </Section>
+
+    <Section>
+      <SectionTitle>Tarde</SectionTitle>
+      <SectionContent>
+        {afternoonAvailability.map(
+          ({ hourFormatted, available, hour }) => (
+            <Hour
+              enabled={available}
+              key={hourFormatted}
+              selected={hour === selectedHour}
+              onPress={() => handleSelectHour(hour)}
+              available={available}
+            >
+              <HourText selected={hour === selectedHour}>
+                {hourFormatted}
+              </HourText>
+            </Hour>
+          ),
+        )}
+      </SectionContent>
+    </Section>
+  </Schedule>
+</Content>
+</Container>
+```
+2. É possível alterar as props de um componente pelo styled-componentes
+```typescript
+export const SectionContent = styled.ScrollView.attrs({
+  contentContainerStyle: { paddingHorizontal: 24 },
+  horizontal: true,
+  showsHorizontalScrollIndicator: false,
+})``;
+```
