@@ -375,3 +375,77 @@ export const ProviderName = styled.Text<ProviderNameProps>`
 `;
 
 ```
+## Criando picker de data
+1. Instalar a lib *@react-native-community/datetimepicker* e fazer o link.
+```bash
+$ yarn add @react-native-community/datetimepicker
+```
+2. Fazer a importação do DateTimePicker e passar uma prop *value={new Date()}*
+```typescript
+
+const [selectedDate, setSelectedDate] = useState(new Date());
+const [showDatePicker, setShowDatePicker] = useState(false);
+
+const handleToggleDatePicker = useCallback(() => {
+  setShowDatePicker(state => !state);
+}, []);
+
+const handleChangeDate = useCallback((event: Event, date: Date | undefined) => {
+  if (Platform.OS === 'android') {
+    setShowDatePicker(false);
+  }
+
+  if (date) {
+    setSelectedDate(false);
+  }
+}, []);
+
+...
+
+<Calendar>
+  <Title>Escolha uma data</Title>
+  <OpenDatePickerButton onPress={handleToggleDatePicker}>
+    <OpenDatePickerButtonText>
+      Selecionar outra data
+    </OpenDatePickerButtonText>
+  </OpenDatePickerButton>
+
+{showDatePicker && (
+  <DayTimePicker
+    onChange={handleChangeDate}
+    value={selectedDate}
+    mode="date"
+    display="calendar"
+  />
+)}
+
+</Calendar>
+
+```
+3. Fazer estilização do OpenDatePickerButton, OpenDatePickerButtonText, Title
+```typescript
+export const Calendar = styled.View``;
+
+export const Title = styled.Text`
+  font-size: 25px;
+  color: #f4ede8;
+  font-family: 'RobotoSlab-Medium';
+  margin: 0 24px 24px;
+`;
+
+export const OpenDatePickerButton = styled(RectButton)`
+  height: 46px;
+  background: #ff9000;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: 0 24px;
+`;
+
+export const OpenDatePickerButtonText = styled.Text`
+  font-family: 'RobotoSlab-Medium';
+  font-size: 16px;
+  color: #232129;
+`;
+
+```
