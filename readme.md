@@ -449,3 +449,35 @@ export const OpenDatePickerButtonText = styled.Text`
 `;
 
 ```
+## Buscando disponibilidade da API
+1. Fazer chamada a api para verificar a disponibilidade do dia selecionado no calendário. Ou seja, sempre que houver uma alteração ou quando o provider selecinado seja alterado.
+
+```typescript
+
+interface ProviderDayAvailbilityItem {
+  hour: number;
+  available: boolean;
+}
+
+interface RouteParams {
+  providerId: string;
+}
+
+const { params } = useRoute();
+const routeParams = params as RouteParams;
+const [selectedProvider, setSelectedProvider] = useState(routeParams.providerId);
+const [selectedDate, setSelectedDate] = useState(new Date());
+
+const [providerDayAvailability, setProviderDayAvailability] = useState<ProviderDayAvailbilityItem[]>([]);
+
+useEffect(() => {
+  api.get(`/providers/${selectedProvider}/day-availability`, {
+    params: {
+      year: selectedDate.getFullYear(),
+      month: selectedDate.getMonth() + 1,
+      day: selectedDate.getDate(),
+    }
+  }).then(response => setProviderDayAvailability(response.data));
+}, [selectedDate, selectedProvider]);
+
+```
