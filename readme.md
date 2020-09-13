@@ -752,3 +752,6 @@ return (
   </Description>
 );
 ```
+## Criação da página de perfil
+1. Fazer a estruturação e criação da página, lembrando sempre do ScrollView, para telas pequenas.
+
