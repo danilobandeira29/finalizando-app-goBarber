@@ -755,3 +755,74 @@ return (
 ## Criação da página de perfil
 1. Fazer a estruturação e criação da página, lembrando sempre do ScrollView, para telas pequenas.
 
+## Atualização do perfil
+1. Fazer como foi feito na web, utilizar o Yup para fazer validação e enviar os dados pra api, pegar o retorno e atualizar o *AsyncStorage*.
+
+```typescript
+const handleUpdateProfile = useCallback(
+    async (data: ProfileFormData) => {
+      try {
+        formRef.current?.setErrors({});
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('Email obrigatório')
+            .email('Digite um E-mail válido'),
+          old_password: Yup.string(),
+          password: Yup.string().when('old_password', {
+            is: val => !!val.length,
+            then: Yup.string().required('Campo obrigatório'),
+            otherwise: Yup.string(),
+          }),
+          password_confirmation: Yup.string()
+            .when('old_password', {
+              is: val => !!val.length,
+              then: Yup.string().required('Campo obrigatório'),
+              otherwise: Yup.string(),
+            })
+            .oneOf([Yup.ref('password')], 'Confirmação obrigátoria'),
+        });
+
+        await schema.validate(data, { abortEarly: false });
+
+        const {
+          email,
+          name,
+          password,
+          old_password,
+          password_confirmation,
+        } = data;
+
+        const formData = {
+          email,
+          name,
+          ...(old_password
+            ? { password, old_password, password_confirmation }
+            : {}),
+        };
+
+        const response = await api.put('/profile', formData);
+
+        await updateUser(response.data);
+
+        Alert.alert('Perfil alterado!');
+
+        navigation.goBack();
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+
+          formRef.current?.setErrors(errors);
+
+          return;
+        }
+
+        Alert.alert(
+          'Erro ao atualização do perfil',
+          'Ocorreu um erro na alteração de perfil, tente novamente',
+        );
+      }
+    },
+    [navigation, updateUser],
+  );
+```
