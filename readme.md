@@ -663,3 +663,61 @@ const handleCreateAppointment = useCallback(() => {
   </CreateAppointmentButtonText>
 </CreateAppointmentButton>
 ```
+## Criando estrutura da tela
+1. Fazer a estrutura da página e estilizar.
+```typescript
+import React from 'react';
+import Icon from 'react-native-vector-icons/Feather';
+import {
+  Container,
+  Title,
+  Description,
+  OkButton,
+  OkButtonText,
+} from './styles';
+
+const AppointmentCreated: React.FC = () => {
+
+  return (
+    <Container>
+      <Icon name="check" size={80} color="#04D361" />
+      <Title>
+        Agendamento
+        {'\n'}
+        concluído
+      </Title>
+      <Description>{handleDateParams}</Description>
+      <OkButton onPress={handleOkPressed}>
+        <OkButtonText>OK</OkButtonText>
+      </OkButton>
+    </Container>
+  );
+};
+
+export default AppointmentCreated;
+
+```
+
+2. Criar a navegação para quando o usuário clicar no bottão *ok*.
+```typescript
+import React, { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
+const AppointmentCreated = () => {
+
+  const { reset } = useNavigation();
+
+  const handleOkPressed = useCallback(() => {
+    reset({
+      routes: [{ name: 'Dashboard' }],
+      index: 0;
+    })
+  }, [reset]);
+
+  return(...);
+}
+```
+
+> Dessa forma, as rotas do usuário serão resetadas e ele não conseguirá voltar para a página *AppointmentCreated*.
+
+> Posso resetar a navegação do usuário para outra página, bastava adicionar ela no routes e informar o index dela. Assim, quando usuário utilizar o *voltar* do celular, ele voltará para a Dashboard.
