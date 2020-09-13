@@ -721,3 +721,34 @@ const AppointmentCreated = () => {
 > Dessa forma, as rotas do usuário serão resetadas e ele não conseguirá voltar para a página *AppointmentCreated*.
 
 > Posso resetar a navegação do usuário para outra página, bastava adicionar ela no routes e informar o index dela. Assim, quando usuário utilizar o *voltar* do celular, ele voltará para a Dashboard.
+
+## Formatando data
+1. Utilizar o format do date-fns e o locale.
+```typescript
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale';
+
+
+interface RouteParams {
+  date: number;
+}
+
+const { params } = useRoute();
+
+const routeParams = params as RouteParams;
+
+const formattedDate = useMemo(() => {
+  return format(
+    routeParams.date,
+    "EEEE ', de' dd 'de' MMMM 'de' yyyy 'às' HH:mm 'h'",
+    { locale: ptBR }
+  )
+}, [routeParams.date]);
+
+return (
+  ...
+  <Description>
+    {formattedDate}
+  </Description>
+);
+```
