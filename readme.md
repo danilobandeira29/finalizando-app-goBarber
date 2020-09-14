@@ -826,3 +826,55 @@ const handleUpdateProfile = useCallback(
     [navigation, updateUser],
   );
 ```
+## Atualizando avatar com Image Picker
+1. Instalar a lib *react-native-image-picker*
+```bash
+yarn add react-native-image-picker
+```
+
+2. Realizar o link(usuário android)
+```bash
+yarn react-native link react-native-image-picker
+```
+
+3. Ir em *android/app/src/main/AndroidManifest.xml* e adicionar
+```xml
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+```
+4. Ir em android/gradle.properties e alterar a versão do flipper para 0.50.0
+
+5. Executar *yarn android*
+6. Fazer importação do *ImagePicker*, e utiliza-lo.
+```typescript
+import ImagePicker from 'react-native-image-picker';
+
+const handleUpdateAvatar = useCallback(() => {
+  ImagePicker.showImagePicker({
+    title: 'Selecione uma foto',
+    cancelButtonTitle: 'Cancelar',
+    chooseFromLibraryButtonTitle: 'Selecionar da galeria',
+    takePhotoButtonTitle: 'Usar câmera',
+  }, response => {
+    if (response.didCancel) {
+      return;
+    }
+
+    if (response.error) {
+      Alert.alert('Erro ao atualizar avatar');
+      return;
+    }
+
+    const data = new FormData();
+
+    data.append('avatar', {
+      type: 'image/jpeg',
+      name: `${user.id}.jpg`,
+      uri: response.uri
+    });
+
+    api.patch('/users/avatar', data).then(resp => updateUser(resp.data));
+
+  })
+}, [user.id, updateUser]);
+```
